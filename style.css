@@ -1,0 +1,121 @@
+body {
+  background-color: rgb(238, 238, 238)
+}
+.mint-container{
+  display:flex;
+  justify-content:center;
+}
+.QA-img {
+  width:100px;
+}
+
+.mint-button{
+  height:20px;
+  width:50px;
+  border-radius: 10px;
+  border:none;
+  background-color: rgb(189, 189, 189);
+  color:aliceblue;
+  box-shadow: 0 0 1px 1px rgba(58, 58, 58, 0.5);
+  margin-top:70px;
+}
+
+.mint-button:hover{
+  background-color: rgb(224, 224, 224);
+  color:rgb(184, 184, 184);
+  box-shadow: 0 0 2px 2px rgba(58, 58, 58, 0.3);
+}
+
+.QAicon{
+  width:25px;
+}
+
+/* Styles for the vertical and horizontal lines */
+hr {
+  border-top: 1px solid #d9d9d9; 
+  width:80%;
+}
+
+.body-container{
+  display:flex;
+  justify-content:center;
+  width:100%;
+}
+.list{
+  width:40%;
+  margin-left:15px
+}
+
+.vertical-line {
+  border-left: 1px solid  #d9d9d9; 
+  height: auto; 
+  margin-right: 20px;
+  margin-left:20px;
+  display: inline-block;
+}
+
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px;
+  display: inline-block;
+}
+
+.item {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.prices {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.prices li {
+  padding-left: 15px;
+}
+
+/* Styles for the triangle button */
+.triangle-button {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 8px 5px 0;
+  border-color: transparent rgb(141, 5, 46) transparent transparent;
+  transition: transform 0.3s;
+}
+
+.open .triangle-button {
+  transform: rotate(-90deg);
+}
+
+.popup{
+  background:rgba(255, 255, 255, 0.95);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-content{
+  margin-top: 25%;
+  margin-left: 10%;
+  width:80%;
+  height:15px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.minted-image{
+  width:150px;
+}

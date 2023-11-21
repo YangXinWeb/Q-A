@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Styles for the vertical and horizontal lines */
+        hr {
+            border-top: 1px solid #000; /* Adjust the color and thickness as needed */
+            margin: 20px 0; /* Adjust the margin as needed */
+        }
+
+        .vertical-line {
+            border-left: 1px solid #000; /* Adjust the color and thickness as needed */
+            height: auto; /* Automatically adjust the height based on content */
+            margin-left: 20px; /* Adjust the margin as needed */
+            display: inline-block;
+        }
+
+        /* Styles for the list of items and prices */
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: inline-block;
+        }
+
+        .item {
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .prices {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none; /* Hide the prices initially */
+        }
+
+        .prices li {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 5px;
+        }
+
+        .like-button {
+            position: absolute;
+            left: 0;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .liked {
+            color: red; /* Change the color when liked if desired */
+        }
+
+        /* Styles for the triangle button */
+        .triangle-button {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 5px 8px 5px 0;
+            border-color: transparent #000 transparent transparent;
+            transition: transform 0.3s;
+        }
+
+        .open .triangle-button {
+            transform: rotate(-90deg);
+        }
+
+        /* Styles for the like count */
+        .like-count {
+            margin-left: 5px;
+        }
+    </style>
+    <title>Page with Auto-Length Separator and Like Functionality</title>
+</head>
+<body>
+
+    <h1>Main Content</h1>
+    <p>This is some content on the page.</p>
+
+    <!-- Horizontal line to separate content -->
+    <hr>
+
+    <!-- Vertical line under the horizontal line -->
+    <div id="vertical-line" class="vertical-line"></div>
+
+    <!-- List of items and prices -->
+    <ul class="item-list">
+        <li class="item">
+            Item 1
+            <div class="triangle-button" onclick="togglePrices(this)"></div>
+            <ul class="prices">
+                <li>
+                    <span class="like-button" onclick="toggleLike(this)">❤️</span>
+                    Price: $10
+                    <span class="like-count">0</span>
+                </li>
+                <li>
+                    <span class="like-button" onclick="toggleLike(this)">❤️</span>
+                    Price: $15
+                    <span class="like-count">0</span>
+                </li>
+                <li>
+                    <span class="like-button" onclick="toggleLike(this)">❤️</span>
+                    Price: $20
+                    <span class="like-count">0</span>
+                </li>
+            </ul>
+        </li>
+        <li class="item">
+            Item 2
+            <div class="triangle-button" onclick="togglePrices(this)"></div>
+            <ul class="prices">
+                <li>
+                    <span class="like-button" onclick="toggleLike(this)">❤️</span>
+                    Price: $25
+                    <span class="like-count">0</span>
+                </li>
+                <li>
+                    <span class="like-button" onclick="toggleLike(this)">❤️</span>
+                    Price: $30
+                    <span class="like-count">0</span>
+                </li>
+                <li>
+                    <span class="like-button" onclick="toggleLike(this)">❤️</span>
+                    Price: $35
+                    <span class="like-count">0</span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Additional Content</h2>
+    <p>More content goes here.</p>
+
+    <script>
+        function togglePrices(triangleButton) {
+            const item = triangleButton.parentNode;
+            item.classList.toggle('open');
+            const prices = item.querySelector('.prices');
+            prices.style.display = prices.style.display === 'none' ? 'block' : 'none';
+            updateVerticalLineHeight();
+        }
+
+        function toggleLike(likeButton) {
+            const likeCount = likeButton.nextElementSibling.nextElementSibling;
+            const currentLikes = parseInt(likeCount.textContent, 10);
+            likeButton.classList.toggle('liked');
+            const newLikes = likeButton.classList.contains('liked') ? currentLikes + 1 : currentLikes - 1;
+            likeCount.textContent = newLikes;
+        }
+
+        // Automatically adjust the vertical line's height based on the list content
+        const verticalLine = document.getElementById('vertical-line');
+        const itemList = document.querySelector('.item-list');
+
+        function updateVerticalLineHeight() {
+            const height = itemList.clientHeight;
+            verticalLine.style.height = height + 'px';
+        }
+    </script>
+
+</body>
+</html>
