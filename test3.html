@@ -17,23 +17,18 @@
     <!-- Horizontal line to separate content -->
     <hr>
 
-        <div class="body-container">
-            <!-- Left List -->
-            <div class="list">
-                <p> ~ New ~ </p>
-                <ul class="item-list" id="list-left">
-                    <!-- New questions will be added here dynamically -->
-                </ul>
-            </div>
-    
-            <!-- Right List -->
-            <div class="list">
-                <p> ~ Top ~ </p>
-                <ul class="item-list" id="list-right">
-                    <!-- Top questions with more answers will be added here dynamically -->
-                </ul>
-            </div>
+    <div class="body-container">
+        <!-- List 1 -->
+        <div class="list">
+            <p> ~ New ~ </p>
+            <ul class="item-list">
+            </ul>
         </div>
+
+        <div class="list">
+            <p> ~ Top ~ </p>
+        </div>
+    </div>
 
     <!-- popup -->
     <div id="popup" class="popup" style="display: none;">
@@ -93,17 +88,11 @@
                 answersList.appendChild(answerInput);
                 answersList.appendChild(submitAnswerBtn);
 
-                const list1 = document.querySelector('#list-left');
-                const list2 = document.querySelector('#list-right');
-
-                // Use prepend to add the new item at the top
-                list1.prepend(newItem);
-
-                // Clone the item for the right list
-                const newItemRight = newItem.cloneNode(true);
-
-                // Use prepend to add the cloned item at the top of the right list
-                list2.prepend(newItemRight);
+                const list1 = document.querySelector('.list:first-child ul');
+                if (list1) {
+                    // Use prepend to add the new item at the top
+                    list1.prepend(newItem);
+                }
 
                 questionInput.value = '';
                 document.getElementById('popup').style.display = 'none';
@@ -141,9 +130,6 @@ function handleTriangleClick(event) {
     answers.style.display = answers.style.display === 'none' ? 'block' : 'none';
 }
 
-
-
-
 function handleAnswerSubmission() {
     console.log('Submit button clicked');
 
@@ -170,47 +156,9 @@ function handleAnswerSubmission() {
         answers.insertBefore(newListItem, answerInput);
         answerInput.value = '';
 
-        // Append the new answer to the corresponding item in the other list
-        const otherList = answers.parentElement.id === 'list-left' ? document.getElementById('list-right') : document.getElementById('list-left');
-
-        const newItemRight = newListItem.cloneNode(true); // Clone only the answer item
-
-        if (answers.parentElement.id === 'list-left') {
-        
-            // Only append to the other list if the current list is the "New" list
-            if (!isAnswerAlreadyAdded(otherList, newAnswer)) {
-                otherList.querySelector('.answers').prepend(newItemRight);
-            }
-        } else {
-            // Find the corresponding item in the other list and append the new answer
-            const correspondingItem = otherList.querySelector('.add-question');
-            const correspondingAnswersList = otherList.querySelector('.answers');
-            const correspondingNewAnswer = newAnswer;
-
-            const dateSpanRight = document.createElement('span');
-            dateSpanRight.classList.add('date');
-            dateSpanRight.textContent = `·${currentDate}`;
-            dateSpanRight.style.fontSize = '9px';
-            dateSpanRight.style.color = '#0000005C';
-
-            const newListItemRight = document.createElement('li');
-            newListItemRight.textContent = `A: ${correspondingNewAnswer}`;
-            newListItemRight.appendChild(dateSpanRight);
-
-            correspondingAnswersList.insertBefore(newListItemRight, correspondingAnswersList.firstChild);
-        }
-
         updateanswerCount();
     }
 }
-
-
-
-
-
-
-
-
 
 function saveState() {
             const triangleButtons = document.querySelectorAll('.triangle-button');

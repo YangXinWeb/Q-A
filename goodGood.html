@@ -17,24 +17,21 @@
     <!-- Horizontal line to separate content -->
     <hr>
 
-        <div class="body-container">
-            <!-- Left List -->
-            <div class="list">
-                <p> ~ New ~ </p>
-                <ul class="item-list" id="list-left">
-                    <!-- New questions will be added here dynamically -->
-                </ul>
-            </div>
-    
-            <!-- Right List -->
-            <div class="list">
-                <p> ~ Top ~ </p>
-                <ul class="item-list" id="list-right">
-                    <!-- Top questions with more answers will be added here dynamically -->
-                </ul>
-            </div>
+    <div class="body-container">
+        <!-- List 1 -->
+        <div class="list" id="newList">
+            <p> ~ New ~ </p>
+            <ul class="item-list">
+            </ul>
         </div>
 
+        <div class="list" id="topList"> 
+            <p> ~ Top ~ </p> 
+            <ul class="top-item-list">
+            </ul>
+        </div>
+    </div>
+    
     <!-- popup -->
     <div id="popup" class="popup" style="display: none;">
         <div class="popup-content">
@@ -93,61 +90,50 @@
                 answersList.appendChild(answerInput);
                 answersList.appendChild(submitAnswerBtn);
 
-                const list1 = document.querySelector('#list-left');
-                const list2 = document.querySelector('#list-right');
-
-                // Use prepend to add the new item at the top
-                list1.prepend(newItem);
-
-                // Clone the item for the right list
-                const newItemRight = newItem.cloneNode(true);
-
-                // Use prepend to add the cloned item at the top of the right list
-                list2.prepend(newItemRight);
+                const list1 = document.querySelector('#newList ul');
+                if (list1) {
+                    // Use prepend to add the new item at the top
+                    list1.prepend(newItem);
+                }
 
                 questionInput.value = '';
                 document.getElementById('popup').style.display = 'none';
 
                 // Reinitialize listeners for the newly added elements
-                initializeListeners();
+                initializeListeners(newItem);
                 updateanswerCount();
+
+                // Sort and display lists in the "Top" section
+                sortAndDisplayLists();
             }
         }
 
-  function initializeListeners() {
-    const triangleButtons = document.querySelectorAll('.triangle-button');
+        function initializeListeners(item) {
+            const triangleButton = item.querySelector('.triangle-button');
+            const submitAnswerBtn = item.querySelector('.submit-answer');
 
-    triangleButtons.forEach(button => {
-        const answers = button.parentElement.querySelector('.answers');
-        answers.style.display = 'none'; // Hide the answers initially
+            if (triangleButton) {
+                triangleButton.addEventListener('click', handleTriangleClick);
+            }
 
-        button.removeEventListener('click', handleTriangleClick); // Remove the existing click event listener
-        button.addEventListener('click', handleTriangleClick);
-    });
+            if (submitAnswerBtn) {
+                submitAnswerBtn.addEventListener('click', handleAnswerSubmission);
+            }
+        }
 
-    // Add an event listener to handle answer submission
-    document.querySelectorAll('.submit-answer').forEach(submitAnswerBtn => {
-        submitAnswerBtn.removeEventListener('click', handleAnswerSubmission); // Remove the existing click event listener
-        submitAnswerBtn.addEventListener('click', handleAnswerSubmission);
-    });
-}
+        function handleTriangleClick(event) {
+            event.stopPropagation(); // Prevent the event from bubbling to the parent (item)
 
-function handleTriangleClick(event) {
-    event.stopPropagation(); // Prevent the event from bubbling to the parent (item)
-
-    const button = event.currentTarget;
-    const answers = button.parentElement.querySelector('.answers');
-    button.parentElement.classList.toggle('open');
-    answers.style.display = answers.style.display === 'none' ? 'block' : 'none';
-}
-
-
-
+            const button = event.currentTarget;
+            const answers = button.parentElement.querySelector('.answers');
+            button.parentElement.classList.toggle('open');
+            answers.style.display = answers.style.display === 'none' ? 'block' : 'none';
+        }
 
 function handleAnswerSubmission() {
     console.log('Submit button clicked');
 
-    const answers = this.parentElement;
+    const answers = this.closest('.item').querySelector('.answers');
     const answerInput = answers.querySelector('.answer-input');
     const newAnswer = answerInput.value.trim();
 
@@ -170,49 +156,12 @@ function handleAnswerSubmission() {
         answers.insertBefore(newListItem, answerInput);
         answerInput.value = '';
 
-        // Append the new answer to the corresponding item in the other list
-        const otherList = answers.parentElement.id === 'list-left' ? document.getElementById('list-right') : document.getElementById('list-left');
-
-        const newItemRight = newListItem.cloneNode(true); // Clone only the answer item
-
-        if (answers.parentElement.id === 'list-left') {
-        
-            // Only append to the other list if the current list is the "New" list
-            if (!isAnswerAlreadyAdded(otherList, newAnswer)) {
-                otherList.querySelector('.answers').prepend(newItemRight);
-            }
-        } else {
-            // Find the corresponding item in the other list and append the new answer
-            const correspondingItem = otherList.querySelector('.add-question');
-            const correspondingAnswersList = otherList.querySelector('.answers');
-            const correspondingNewAnswer = newAnswer;
-
-            const dateSpanRight = document.createElement('span');
-            dateSpanRight.classList.add('date');
-            dateSpanRight.textContent = `·${currentDate}`;
-            dateSpanRight.style.fontSize = '9px';
-            dateSpanRight.style.color = '#0000005C';
-
-            const newListItemRight = document.createElement('li');
-            newListItemRight.textContent = `A: ${correspondingNewAnswer}`;
-            newListItemRight.appendChild(dateSpanRight);
-
-            correspondingAnswersList.insertBefore(newListItemRight, correspondingAnswersList.firstChild);
-        }
-
         updateanswerCount();
+        sortAndDisplayLists();
     }
 }
 
-
-
-
-
-
-
-
-
-function saveState() {
+        function saveState() {
             const triangleButtons = document.querySelectorAll('.triangle-button');
             triangleButtons.forEach(button => {
                 const answers = button.parentElement.querySelector('.answers');
@@ -234,41 +183,99 @@ function saveState() {
         var mintButton = document.getElementById('btn');
         mintButton.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // Load the state from local storage
             loadState();
         });
 
-  // Function to update the answer count icon
-  function updateanswerCount() {
-      const triangleButtons = document.querySelectorAll('.triangle-button');
-      triangleButtons.forEach(button => {
-          const answers = button.parentElement.querySelector('.answers');
-          const answerCountIcon = button.parentElement.querySelector('.answer-count-icon');
-          const answerCount = answers.querySelectorAll('li').length;
-          answerCountIcon.textContent = answerCount;
-      });
-  } 
+        // Function to update the answer count icon
+        function updateanswerCount() {
+            const triangleButtons = document.querySelectorAll('.triangle-button');
+            triangleButtons.forEach(button => {
+                const answers = button.parentElement.querySelector('.answers');
+                const answerCountIcon = button.parentElement.querySelector('.answer-count-icon');
+                const answerCount = answers.querySelectorAll('li').length;
+                answerCountIcon.textContent = answerCount;
+            });
+        }
 
-// Show the popup
-var btn = document.getElementById('btn');
-btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    document.getElementById('popup').style.display = 'block';
+        // Show the popup
+        var btn = document.getElementById('btn');
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('popup').style.display = 'block';
 
-    document.getElementById('close-popup').addEventListener('click', function () {
-        document.getElementById('popup').style.display = 'none';
+            document.getElementById('close-popup').addEventListener('click', function () {
+                document.getElementById('popup').style.display = 'none';
+            });
+
+            // Reattach listeners for the "Submit" button after showing the popup
+            attachSubmitQuestionListeners();
+        });
+
+        function attachSubmitQuestionListeners() {
+            const submitQuestionBtns = document.querySelectorAll('.submit-question');
+            submitQuestionBtns.forEach(submitQuestionBtn => {
+                submitQuestionBtn.removeEventListener('click', addQuestionToList);
+                submitQuestionBtn.addEventListener('click', addQuestionToList);
+            });
+        }
+
+        document.querySelectorAll('.submit-question').forEach(submitQuestionBtn => {
+            submitQuestionBtn.removeEventListener('click', addQuestionToList);
+            submitQuestionBtn.addEventListener('click', addQuestionToList);
+        });
+
+        // Call initializeListeners initially
+        initializeListenersForTopListItems();
+        initializeListenersForNewListItems();
+
+        // Sort and display lists on page load
+        sortAndDisplayLists();
+
+// Function to sort and display lists in the "Top" section
+function sortAndDisplayLists() {
+    const topList = document.querySelector('#topList ul');
+    const newListItems = document.querySelectorAll('#newList .item');
+
+    // Convert NodeList to an array for sorting
+    const newArray = Array.from(newListItems);
+
+    // Sort the array based on the number of answers
+    newArray.sort((a, b) => {
+        const aCount = a.querySelectorAll('.answers li').length;
+        const bCount = b.querySelectorAll('.answers li').length;
+        return bCount - aCount;
     });
-});
 
-document.querySelectorAll('.submit-question').forEach(submitQuestionBtn => {
-    submitQuestionBtn.removeEventListener('click', addQuestionToList); // Remove the existing click event listener
-    submitQuestionBtn.addEventListener('click', addQuestionToList);
-});
+    // Clear the existing content in the "Top" list
+    topList.innerHTML = '';
 
-// Call initializeListeners initially
-initializeListeners();
+    // Clone and append sorted items to the "Top" list
+    newArray.forEach(item => {
+        const clonedItem = item.cloneNode(true);
+        topList.appendChild(clonedItem);
 
+        // Reinitialize listeners for the cloned item
+        initializeListeners(clonedItem);
+    });
+
+    // Reinitialize listeners for all items in the "Top" list
+    initializeListenersForTopListItems();
+    initializeListenersForNewListItems();
+}
+
+        // Function to initialize event listeners for triangles and answer submit buttons in the "Top" list
+        function initializeListenersForTopListItems() {
+            const topListItems = document.querySelectorAll('#topList .item');
+            topListItems.forEach(item => initializeListeners(item));
+        }
+
+        // Function to initialize event listeners for triangles and answer submit buttons in the "New" list
+        function initializeListenersForNewListItems() {
+            const newListItems = document.querySelectorAll('#newList .item');
+            newListItems.forEach(item => initializeListeners(item));
+        }
     </script>
 </body>
 </html>

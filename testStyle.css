@@ -2,6 +2,9 @@ body {
   background-color: rgb(238, 238, 238);
 }
 
+.add-question{
+}
+
 .mint-container{
   width: 100%;
   padding: 10px;
@@ -107,7 +110,7 @@ hr {
   height: 0;
   border-style: solid;
   border-width: 6px 13px 6px 0;
-  border-color: transparent rgb(141, 5, 46) transparent transparent;
+  border-color: transparent rgb(5, 141, 68) transparent transparent;
   transition: transform 0.3s;
   margin-left: 10px;
   border-radius: 2px;
@@ -173,3 +176,9 @@ hr {
 .minted-image{
   width:150px;
 }
+
+.top-item-list {
+  list-style: none;
+  padding: 0;
+}
+

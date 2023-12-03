@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="mint-container">
+        <p>... ...</p>
+        <img class="QA-img" src="Pictures/B&H4.gif">
+        <p>... ...</p>
+        <button class="mint-button"  id="btn" >Mint</button>
+    </div>
+    
+    <!-- Horizontal line to separate content -->
+    <hr>
+    <!-- Vertical line under the horizontal line -->
+    <div id="vertical-line" class="vertical-line"></div>
+
+    <div class="body-container"> 
+        <!-- List 1 -->       
+        <div class="list">
+            <p> ~ New ~ </p>
+            <ul class="item-list">
+                <li class="item">                             
+                   <img class="QAicon" src="Pictures/Answer.png" alt="Question Icon">
+                    
+                    <span class="answer-count-icon"></span>
+                    <span class="add-question">Am I cats? </span>             
+                    <div class="triangle-button  toggle-list"></div>
+                    <ul class="answers">
+                        <li>A: You are a butterfly that died in a dream</li>
+                        <li>A: I hope I know!</li>
+                        <li>A: I’m not sure, but I know you will make me rich!</li>
+                        <li>A: Lol! I ate a hamburger, today.</li>
+                        <li>A: Maybe!</li>
+                        <li>A: You will be water one day!</li>
+                        <li>A: You are cats!</li>
+                        <li>A: You are us</li>                   
+                    <input class="answer-input" type="text" placeholder="Enter your Answer">
+                    <button class="submit-answer">Submit</button>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+ 
+      <div class="list"> 
+       <p> ~ Top ~ </p> 
+        <!-- List 2 -->
+        <ul class="item-list">
+            <li class="item">     
+                <img class="QAicon" src="Pictures/Question.png" alt="Question Icon">
+
+                <span class="answer-count-icon"></span>
+
+                <span class="add-question" >How can we end Israel and Palestine war?</span>
+                <div class="triangle-button"></div>
+                <ul class="answers">
+                  <li>A: One side eventually winning decisively</li>
+                  <li>A: Tell the U.S. There is Oil in Palestine</li>
+                  <li>A: As long as the feud goes on between them, it will never end</li>
+                  <input  class="answer-input"  type="text" placeholder="Enter your Answer">
+                  <button  class="submit-answer">Submit</button>
+                </ul>
+            </li>            
+        </ul>       
+      </div>     
+    </div>
+
+    <!-- popup -->
+    <div id="popup" class="popup" style="display: none;"> 
+    <div class="popup-content">
+        <img class="minted-image" src="Pictures/00.png">
+        <input class="question-input"  type="text" placeholder="Enter Your Question">
+        <button class="submit-question" id="close-popup">``Add Q``</button>
+    </div>
+    </div>   
+    <!-- popup -->    
+    <script>
+        // Show the popup
+var btn = document.getElementById ('btn');
+btn.addEventListener ('click', function(e){
+e.preventDefault(); popup.style.display = 'block'; 
+
+// Close the popup when the "Close" button is clicked
+document.getElementById('close-popup').addEventListener('click', function() {
+    popup.style.display = 'none';
+});   
+//***************************************************************//
+// Add event listener to handle adding question and image to the new list
+document.querySelectorAll('.submit-question').forEach(submitQuestionBtn => {
+    submitQuestionBtn.addEventListener('click', () => {
+        const questionInput = document.querySelector('.question-input');
+        const questionText = questionInput.value.trim();
+
+        if (questionText !== '') {
+            // Clone the image to create the QA icon image
+            const image = document.querySelector('.popup-content img').cloneNode(true);
+
+            // Create elements for the new question
+            const newItem = document.createElement('li');
+            newItem.classList.add('item');
+
+            const qaIcon = document.createElement('img');
+            qaIcon.classList.add('QAicon');
+            qaIcon.src = image.src;
+            newItem.appendChild(qaIcon);
+
+            const questionSpan = document.createElement('span');
+            questionSpan.classList.add('question');
+            questionSpan.textContent = questionText;
+            newItem.appendChild(questionSpan);
+
+            const answerCountIcon = document.createElement('span');
+            answerCountIcon.classList.add('answer-count-icon');
+            newItem.appendChild(answerCountIcon);
+
+            const triangleButton = document.createElement('div');
+            triangleButton.classList.add('triangle-button');
+            newItem.appendChild(triangleButton);
+
+            const answersList = document.createElement('ul');
+            answersList.classList.add('answers');
+            // Add your logic to append answers or input elements here
+            newItem.appendChild(answersList);
+
+            const answerInput = document.createElement('input');
+            answerInput.classList.add('answer-input');
+            answerInput.type = 'text';
+            answerInput.placeholder = 'Enter your Answer';
+            newItem.appendChild(answerInput);
+
+            const submitAnswerBtn = document.createElement('button');
+            submitAnswerBtn.classList.add('submit-answer');
+            submitAnswerBtn.textContent = 'Submit';
+            newItem.appendChild(submitAnswerBtn);
+
+            // Select List 1
+            const list1 = document.querySelector('.list:first-child');
+            if (list1) {
+                const newList = document.createElement('ul');
+                newList.classList.add('item-list');
+                newList.appendChild(newItem); // Append the new question to the new item-list
+                list1.appendChild(newList); // Append the new item-list to List 1
+            }
+
+            // Clear input after adding question
+            questionInput.value = '';
+
+            // Close the popup after adding the question
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+    });
+});
+
+//***************************************************************//
+})
+
+// Automatically adjust the vertical line's height based on the list content
+const verticalLine = document.getElementById('vertical-line');
+const itemList = document.querySelector('.item-list');
+
+function updateVerticalLineHeight() {
+    const height = itemList.clientHeight;
+    verticalLine.style.height = height + 'px';
+}
+
+// Add click event listeners to toggle the visibility of answers
+const triangleButtons = document.querySelectorAll('.triangle-button');
+
+triangleButtons.forEach(button => {
+    const answers = button.parentElement.querySelector('.answers');
+    answers.style.display = 'none'; // Hide the answers initially
+
+    button.addEventListener('click', (event) => {
+        event.stopPropagation(); // Prevent the event from bubbling to the parent (item)
+
+        button.parentElement.classList.toggle('open');
+        answers.style.display = answers.style.display === 'none' ? 'block' : 'none';
+        updateVerticalLineHeight();
+    });
+});
+     
+// Function to update the answer count icon
+function updateanswerCount() {
+    triangleButtons.forEach(button => {
+        const answers = button.parentElement.querySelector('.answers');
+        const answerCountIcon = button.parentElement.querySelector('.answer-count-icon');
+
+        // Count the number of answers
+        const answerCount = answers.querySelectorAll('li').length;
+
+        // Update the answer count icon content
+        answerCountIcon.textContent = answerCount;
+    });
+}
+
+// Add an event listener to handle answer submission
+document.querySelectorAll('.submit-answer').forEach(submitAnswerBtn => {
+submitAnswerBtn.addEventListener('click', () => {
+console.log('Submit button cicked');
+
+const answers = submitAnswerBtn.parentElement;
+const answerInput = answers.querySelector('.answer-input');
+const newAnswer = answerInput.value.trim();
+
+console.log('Answer:', newAnswer);
+
+if (newAnswer !== '') {
+    const dateSpan = document.createElement('span');
+    dateSpan.classList.add('date');
+    
+    const currentDate = new Date().toLocaleDateString(); // Get current date
+    
+    dateSpan.textContent = `·${currentDate}`;
+    dateSpan.style.fontSize = '9px'; // Change the font size
+    dateSpan.style.color = '#0000005C'; // Change the color
+    
+    const newListItem = document.createElement('li');
+    newListItem.textContent = `A: ${newAnswer}`;
+    newListItem.appendChild(dateSpan); // Append the dateSpan to the newListItem
+    
+    answers.insertBefore(newListItem, answerInput);
+    answerInput.value = '';
+
+    updateanswerCount();
+    updateVerticalLineHeight();
+}
+});
+});
+
+// Add an event listener to the "Submit" button to update the answer count when new answers are added
+document.querySelectorAll('.answers button').forEach(submitBtn => {
+    submitBtn.addEventListener('click', () => {
+        // Wait for any asynchronous operation or use appropriate logic to add new answers
+        // For example, after adding a new answer dynamically:
+        // ...
+
+        // Call the function to update the answer count
+        updateanswerCount();
+    });
+});
+
+
+/////// Update the vertical line height on initial load
+updateVerticalLineHeight();
+updateanswerCount();   
+
+
+
+    </script>
+</body>
+</html>
