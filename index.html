@@ -142,8 +142,6 @@ function handleTriangleClick(event) {
 }
 
 
-
-
 function handleAnswerSubmission() {
     console.log('Submit button clicked');
 
@@ -171,7 +169,7 @@ function handleAnswerSubmission() {
         answerInput.value = '';
 
         // Append the new answer to the corresponding item in the other list
-        const otherList = answers.parentElement.id === 'list-left' ? document.getElementById('list-right') : document.getElementById('list-left');
+        const otherList = answers.parentElement.parentElement.id === 'list-left' ? document.getElementById('list-right') : document.getElementById('list-left');
 
         const newItemRight = newListItem.cloneNode(true); // Clone only the answer item
 
@@ -201,16 +199,9 @@ function handleAnswerSubmission() {
         }
 
         updateanswerCount();
+        sortAndDisplayLists();
     }
 }
-
-
-
-
-
-
-
-
 
 function saveState() {
             const triangleButtons = document.querySelectorAll('.triangle-button');
